@@ -1,30 +1,47 @@
+# app.py
 import streamlit as st
-import time
+import pygame
+import pyttsx3
 
-# Define your simulation logic as functions
+# Function to simulate the game
+def simulate_game():
+    pygame.init()
 
-def run_simulation(params):
-    # Simulate traffic with given parameters
-    time.sleep(5)  # Placeholder for actual simulation
-    return {"total_cars": 100, "average_wait_time": 10}  # Example results
+    # Set up the display
+    screen = pygame.display.set_mode((800, 600))
+    pygame.display.set_caption("Simulation")
 
-# Create Streamlit app
+    # Main loop
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        screen.fill((255, 255, 255))
+        pygame.draw.circle(screen, (255, 0, 0), (400, 300), 30)
+        pygame.display.update()
+
+    pygame.quit()
+
+# Function to speak text
+def speak(text):
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+
+# Streamlit UI
 def main():
-    st.title("Traffic Simulation")
+    st.title("Simulation App")
 
-    # Add UI elements for input parameters
-    red_time = st.slider("Red Light Duration", 0, 300, 150)
-    yellow_time = st.slider("Yellow Light Duration", 0, 30, 5)
-    green_time = st.slider("Green Light Duration", 0, 60, 30)
-    sim_duration = st.slider("Simulation Duration (seconds)", 0, 3600, 300)
+    st.write("Press the button to simulate the game.")
+    if st.button("Simulate Game"):
+        simulate_game()
 
-    if st.button("Run Simulation"):
-        st.write("Simulating...")
-        params = {"red": red_time, "yellow": yellow_time, "green": green_time}
-        results = run_simulation(params)
-        st.write("Simulation Results:")
-        st.write(f"Total Cars Passed: {results['total_cars']}")
-        st.write(f"Average Wait Time: {results['average_wait_time']} seconds")
+    st.write("Enter text below to hear it spoken aloud.")
+    text_input = st.text_input("Enter text:")
+    if st.button("Speak"):
+        speak(text_input)
 
 if __name__ == "__main__":
     main()
